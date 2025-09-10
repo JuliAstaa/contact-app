@@ -1,0 +1,19 @@
+# Python cache & compiled
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual env
+venv/
+ENV/
+.venv/
+
+# Database lokal (biar ga ke-push ke repo)
+*.db
+*.sqlite3
+
+# Environment files (biar SECRET_KEY dll aman)
+.env
+
+# VSCode settings (opsional)
+.vscode/

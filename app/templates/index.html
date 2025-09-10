@@ -1,0 +1,33 @@
+{% extends "base.html" %} {% block index %}
+
+<div>
+  <table border="1">
+    <tr>
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th>Phone Number</th>
+      <th>Email</th>
+      <th>Action</th>
+    </tr>
+
+    {% if not datas %}
+    <tr>
+      <td colspan="5">Nden ada data beb</td>
+    </tr>
+    {% else %} {% for data in datas %}
+    <tr>
+      <td>{{data.f_name}}</td>
+      <td>{{data.l_name}}</td>
+      <td>{{data.phone_number}}</td>
+      <td>{{data.email}}</td>
+      <td>
+        <a href="{{url_for('contact.delete_contact', id=data.id)}}">Delete</a> |
+        <a href="{{url_for('contact.edit_contact', id=data.id)}}">Edit</a>
+      </td>
+    </tr>
+    {% endfor %} {% endif %}
+  </table>
+  <a href="{{url_for('contact.add_contact')}}">Add Contact</a>
+</div>
+
+{% endblock %}

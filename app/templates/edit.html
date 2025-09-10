@@ -1,0 +1,40 @@
+{% extends "base.html" %} {% block edit %}
+<form action="{{url_for('contact.edit_contact', id=user.id)}}" method="POST">
+  <h1>EDIT</h1>
+  <table>
+    <tr>
+      <td>Phone Number</td>
+      <td>:</td>
+      <td>
+        <input
+          type="text"
+          name="phone_number"
+          id=""
+          value="{{user.phone_number}}"
+        />
+      </td>
+    </tr>
+    <tr>
+      <td>First Name</td>
+      <td>:</td>
+      <td><input type="text" name="f_name" id="" value="{{user.f_name}}" /></td>
+    </tr>
+    <tr>
+      <td>Last Name</td>
+      <td>:</td>
+      <td><input type="text" name="l_name" id="" value="{{user.l_name}}" /></td>
+    </tr>
+    <tr>
+      <td>Email</td>
+      <td>:</td>
+      <td><input type="email" name="email" id="" value="{{user.email}}" /></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td><input type="submit" name="submit" value="Save" id="" /></td>
+    </tr>
+  </table>
+</form>
+
+{% endblock %}
