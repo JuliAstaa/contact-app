@@ -25,8 +25,11 @@ class App:
 
     def router(self):
         from app.routes.contact_routes import ContactRoutes
+        from app.routes.api_routes import ApiContactRoutes
+        contact_api = ApiContactRoutes()
         contact = ContactRoutes()
         self.app.register_blueprint(contact.contact)
+        self.app.register_blueprint(contact_api.contact_api)
         
 
     def app(self):

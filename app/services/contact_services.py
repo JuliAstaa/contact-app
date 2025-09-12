@@ -13,9 +13,9 @@ class ContactServices:
             self.db.session.add(new_contact)
             self.db.session.commit()
             return new_contact
-        except:
+        except Exception as e:
             db.session.rollback()
-            return False
+            return {"error": str(e)}
     
     def get_all_contact(self):
         return self.MyContact.query.all()
