@@ -57,7 +57,6 @@ class ApiContactRoutes:
                 }
                 return jsonify(response)
             
-
     def add_contact(self):
         @self.contact_api.route("/api/add-contact", methods=['POST'])
         def add_contact():
@@ -102,9 +101,84 @@ class ApiContactRoutes:
                 }
                 return jsonify(response), 405
                 
-
     def edit_contact(self):
-        pass
+        @self.contact_api.route("/api/edit-contact/<int:id>", methods=["PATCH"])
+        def edit_contact(id):
+            if request.method == "PATCH":
+
+                user = ContactServices().get_data_by_id(id)
+
+                f_name = request.json.get('f_name', '').strip()
+                l_name = request.json.get('l_name', '').strip()
+                phone_number = request.json.get('phone_number', '').strip()
+                email = request.json.get('email', '').strip()
+
+                is_edited = ContactServices().edit_contact(user=user, phone_number=phone_number, f_name=f_name, l_name=l_name, email=email)
+
+                if is_edited:
+                    response = {
+                    'status': 200,
+                    'messages': "OK",
+                    'data': {
+                        'id': user.id,
+                        'phone_number': user.phone_number,
+                        'f_name': user.f_name,
+                        'l_name': user.l_name,
+                        'email': user.email
+                    },
+                    'error': None
+                    }
+                    return jsonify(response), 200
+                else:
+                    response = {
+                    'status': 400,
+                    'messages': "bad Request",
+                    'data': None,
+                    'error': None
+                    }
+                    return jsonify(response), 400
+
+
+            else:
+                response = {
+                    'status': 405,
+                    'messages': "Method Not Allowed",
+                    'data': None,
+                    'error': None
+                }
+                return jsonify(response), 405
 
     def delete_contact(self):
-        pass
+        @self.contact_api.route("/api/delete-contact/<int:id>", methods=["DELETE"])
+        def delete_contact(id):
+            if request.method == "DELETE":
+                user = ContactServices().get_data_by_id(id)
+
+                is_deleted = ContactServices().remove_contact(user)
+
+                if is_deleted:
+                    response = {
+                    'status': 200,
+                    'messages': "OK",
+                    'data': None,
+                    'error': None
+                    }
+                    return jsonify(response), 200
+                
+                else:
+                    response = {
+                    'status': 400,
+                    'messages': "Bad Request",
+                    'data': None,
+                    'error': None
+                    }
+                    return jsonify(response), 400
+
+            else:
+                response = {
+                    'status': 405,
+                    'messages': "Method Not Allowed",
+                    'data': None,
+                    'error': None
+                }
+                return jsonify(response), 405
