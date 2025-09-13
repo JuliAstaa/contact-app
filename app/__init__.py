@@ -2,6 +2,7 @@ from flask import Flask
 from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
 import os
+from flask_cors import CORS
 
 load_dotenv()
 
@@ -14,6 +15,7 @@ class App:
         self.config()
         self.database()
         self.router()
+        CORS(self.app)
 
     def config(self):
         self.app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
