@@ -1,6 +1,7 @@
 from flask import request, Blueprint, jsonify
 from app.services.contact_services import ContactServices
 from app.schema.mycontact_schema import MyContactSchema
+from app.utils.validator import FormValidator
 
 contact_schema = MyContactSchema()
 contacts_schema = MyContactSchema(many=True)
@@ -66,31 +67,46 @@ class ApiContactRoutes:
                 phone_number = request.json.get('phone_number', '').strip()
                 email = request.json.get('email', '').strip()
 
-                is_created = ContactServices().create_contact(f_name=f_name, l_name=l_name, phone_number=phone_number, email=email)
+                print(f_name, l_name, phone_number, email)
 
-                if is_created:
-                    response = {
-                    'status': 201,
-                    'messages': "Created",
-                    'data': {
-                        "id": is_created.id,
-                        "f_name": is_created.f_name,
-                        "l_name": is_created.l_name,
-                        "phone_number": is_created.phone_number,
-                        "email": is_created.email
-                        },
-                    'error': None
-                    }
-                    return jsonify(response), 201
-                
-                else:
+                error = FormValidator(f_name=f_name, l_name=l_name, phone_number=phone_number, email=email).validate_all()
+
+                if error:
                     response = {
                     'status': 400,
                     'messages': "Bad Request",
                     'data': None,
-                    'error': is_created['error']
+                    'error': error
                     }
                     return jsonify(response), 400
+                
+                else:
+
+                    is_created = ContactServices().create_contact(f_name=f_name, l_name=l_name, phone_number=phone_number, email=email)
+
+                    if is_created:
+                        response = {
+                        'status': 201,
+                        'messages': "Created",
+                        'data': {
+                            "id": is_created.id,
+                            "f_name": is_created.f_name,
+                            "l_name": is_created.l_name,
+                            "phone_number": is_created.phone_number,
+                            "email": is_created.email
+                            },
+                        'error': None
+                        }
+                        return jsonify(response), 201
+                    
+                    else:
+                        response = {
+                        'status': 400,
+                        'messages': "Bad Request",
+                        'data': None,
+                        'error': is_created['error']
+                        }
+                        return jsonify(response), 400
                 
             else:
                 response = {
