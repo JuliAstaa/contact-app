@@ -11,3 +11,10 @@ class MyContact(db.Model):
     def __repr__(self):
         return f"<Phone_number = {self.phone_number}>"
     
+class Users(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    username = db.Column(db.String(16), unique=True, nullable=False)
+    password = db.Column(db.String(255), nullable=False)
+
+    def __repr__(self):
+        return f"<username = {self.username}>"

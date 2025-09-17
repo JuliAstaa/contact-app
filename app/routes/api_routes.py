@@ -67,8 +67,6 @@ class ApiContactRoutes:
                 phone_number = request.json.get('phone_number', '').strip()
                 email = request.json.get('email', '').strip()
 
-                print(f_name, l_name, phone_number, email)
-
                 error = FormValidator(f_name=f_name, l_name=l_name, phone_number=phone_number, email=email).validate_all()
 
                 if error:

@@ -28,10 +28,13 @@ class App:
     def router(self):
         from app.routes.contact_routes import ContactRoutes
         from app.routes.api_routes import ApiContactRoutes
+        from app.routes.auth_routes import AuthRoutes
         contact_api = ApiContactRoutes()
         contact = ContactRoutes()
+        auth = AuthRoutes()
         self.app.register_blueprint(contact.contact)
         self.app.register_blueprint(contact_api.contact_api)
+        self.app.register_blueprint(auth.auth)
         
 
     def app(self):
