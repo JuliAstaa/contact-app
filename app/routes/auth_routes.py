@@ -15,6 +15,7 @@ class AuthRoutes:
         self.create_user()
         self.login_user()
         self.profile_user()
+        self.change_password_user()
 
     def create_user(self):
         @self.auth.route('/register', methods=['POST'])
@@ -39,12 +40,12 @@ class AuthRoutes:
                     return jsonify(response), 201
             else:
                 response = {
-                    'status': 400,
-                    'messages': "Bad Request",
+                    'status': 405,
+                    'messages': "Method Not Allowed",
                     'data': None,
-                    'error': is_created['error']
-                    }
-                return jsonify(response), 400
+                    'error': "Method Not Allowed"
+                }
+                return jsonify(response), 405
             
     def login_user(self):
         @self.auth.route('/login', methods=["POST"])
@@ -78,12 +79,12 @@ class AuthRoutes:
                     return jsonify(response), 200
             else:
                 response = {
-                    'status': 400,
-                    'messages': "Bad Request",
+                    'status': 405,
+                    'messages': "Method Not Allowed",
                     'data': None,
-                    'error': is_logged_in['error']
-                    }
-                return jsonify(response), 400
+                    'error': "Method Not Allowed"
+                }
+                return jsonify(response), 405
             
     def profile_user(self):
         @self.auth.route("/profile", methods=["GET"])
@@ -91,7 +92,6 @@ class AuthRoutes:
         def profile():
             user_id = int(get_jwt_identity())
             user = Users.query.get(user_id)
-            print(user_id)
 
             if not user:
                 return jsonify({
@@ -111,4 +111,57 @@ class AuthRoutes:
                 "error": None
             }), 200
 
+    def change_password_user(self):
+        @self.auth.route("/profile/change-password", methods=["PATCH"])
+        @jwt_required()
+        def change_password():
+            if request.method == "PATCH":
+                user_id = int(get_jwt_identity())
+                user = Users.query.get_or_404(user_id)
+
+                new_password = request.json.get("new_password", '').strip()
+
+                if not user:
+                    return jsonify({
+                        'status': 404,
+                        'messages': 'User not found',
+                        'data': None,
+                        'error': 'Not Found'
+                    }), 404
+                
+                result = self.service.change_password(user=user, new_password=new_password)
+                
+
+                if isinstance(result, Users):
+                    response = {
+                    'status': 200,
+                    'messages': "Password changed!",
+                    'data': {
+                        "username": result.username
+                    },
+                    'error': None
+                    }
+                    return jsonify(response), 200
+
+                else :
+                    response = {
+                    'status': 400,
+                    'messages': "Failed to change password!",
+                    'data': {
+                        "username": result.username
+                    },
+                    'error': result.get("error")
+                    }
+                    return jsonify(response), 400
+                
+
+                
+            else:
+                response = {
+                    'status': 405,
+                    'messages': "Method Not Allowed",
+                    'data': None,
+                    'error': "Method Not Allowed"
+                }
+                return jsonify(response), 405
 

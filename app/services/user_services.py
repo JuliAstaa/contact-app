@@ -30,5 +30,16 @@ class UserServices:
                 return None
         except Exception as e:
             return {"error": str(e)}
+        
+    def change_password(self, user, new_password):
+        try:
+            hashed_password: generate_password_hash = generate_password_hash(new_password, method="pbkdf2:sha256", salt_length=16)
+
+            user.password = hashed_password
+            self.db.session.commit()
+            return user
+        except Exception as e:
+            self.db.session.rollback()
+            return {"error": str(e)}
     
 

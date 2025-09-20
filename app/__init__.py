@@ -18,7 +18,7 @@ class App:
         self.database()
         self.jwt()
         self.router()
-        CORS(self.app)
+        CORS(self.app)  
 
     def config(self):
         self.app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
